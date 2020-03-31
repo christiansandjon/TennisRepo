@@ -1,5 +1,7 @@
 package com.training.tennis.core;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.*;
 
 public class TestDeConnection {
@@ -9,18 +11,20 @@ public class TestDeConnection {
             //Seulement avant Java 7/JDBC 4
             //Class.forName(DRIVER_CLASS_NAME);
 
+            MysqlDataSource dataSource = new MysqlDataSource();
+
+            dataSource.setUrl();
             //MySQL driver MySQL Connector // com.mysql.jdbc.Driver
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/tennis?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Paris","root","root");
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from tennis.joueur where prenom = 'Serena'");
+            PreparedStatement preparedStatement = conn.prepareStatement("update joueur set prenom = ?, nom =?, sexe =? where id = 1 ");
 
-
-            while (resultSet.next()) {
-                String prenom = resultSet.getString("prenom");
-                String nom = resultSet.getString("nom");
-                System.out.println(prenom+" "+nom);
-            }
-
+            String pnom = "chris";
+            String nom = "sandjon";
+            String sexe = "M";
+                preparedStatement.setString(1,pnom);
+                preparedStatement.setString(2,nom);
+                preparedStatement.setString(3,sexe);
+                preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
